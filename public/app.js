@@ -108,19 +108,21 @@ async function loadRaw(text, name = "Pasted email") {
 }
 
 function setupPaste() {
-  const run = () => {
+  const run = (name) => {
     const text = $("#paste-input").value;
     if (!text.trim()) return toast("Paste some HTML or an .eml first", true);
-    loadRaw(text).catch((e) => toast(e.message, true));
+    loadRaw(text, name).catch((e) => toast(e.message, true));
   };
-  $("#paste-check").addEventListener("click", run);
+  $("#paste-check").addEventListener("click", () => run());
   $("#paste-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) run();
   });
-  $("#paste-sample").addEventListener("click", async () => {
-    $("#paste-input").value = await fetch("sample.html").then((r) => r.text());
-    run();
-  });
+  for (const b of $$("[data-sample]")) {
+    b.addEventListener("click", async () => {
+      $("#paste-input").value = await fetch(`samples/${b.dataset.sample}.html`).then((r) => r.text());
+      run(`Sample: ${b.textContent}`);
+    });
+  }
 }
 
 function setupUpload() {

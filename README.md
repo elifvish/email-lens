@@ -3,6 +3,8 @@
 A free, local tool that checks whether an HTML email will survive real email clients and
 devices. It runs on your machine, and no email content is uploaded anywhere.
 
+![email-lens demo: checking a sample email across devices, modes, clients and live engines](docs/demo.gif)
+
 - **Client support:** every HTML and CSS feature the email uses, checked against
   [caniemail.com](https://www.caniemail.com) data for ~48 clients (Gmail, Outlook, Apple Mail,
   Yahoo, Samsung Email, Thunderbird, AOL, ProtonMail and more), each scored, with the notes
@@ -39,9 +41,69 @@ saving it. A tile's engine page closes when you close the tile, switch modes or 
 page, stop the server, or after 60 seconds with nobody watching. Only the CLI's `--render <dir>`
 writes files, to the folder you name.
 
+## Walkthrough
+
+Open http://localhost:4600 and paste an email, drop an `.html`/`.eml` file, or connect an inbox.
+Two samples are built in: a **Broken report** with typical mistakes and a **Responsive
+newsletter** that passes. The screenshots below use them.
+
+### 1. Preview on every device
+
+Each preview runs your email in an iframe at real device widths, with scripts off. Badges flag
+problems found on that device. Here the broken sample's fixed 600px table overflows both phones.
+
+![Preview tab: the broken sample on iPhone SE and Android, with error and warning badges](docs/screenshots/01-preview.png)
+
+### 2. Switch modes to see what clients do to it
+
+*Dark* applies the email's own dark-mode CSS, as Apple Mail does. *Forced dark* simulates the
+colour inversion of the Gmail and Outlook apps. *No `<style>`* removes embedded CSS, as Gmail does
+for non-Google accounts. *Images off* blocks images, the default in many corporate clients.
+
+| Dark (the newsletter's own dark styles) | Forced dark (Gmail / Outlook apps) |
+|---|---|
+| ![Dark mode preview of the responsive newsletter](docs/screenshots/06-dark.png) | ![Forced dark preview of the responsive newsletter](docs/screenshots/07-forced-dark.png) |
+
+![No style mode: without embedded CSS the broken sample's layout falls apart](docs/screenshots/02-no-style.png)
+
+### 3. See which clients support what
+
+Every HTML and CSS feature in the email is matched against [caniemail.com](https://www.caniemail.com)
+data. Each client gets a score; click one to see what it drops and why.
+
+![Clients tab: per-client support scores, Outlook for Windows expanded to show unsupported features](docs/screenshots/03-clients.png)
+
+The **Features** tab turns it around: each feature, where it's used in your code, and which
+clients don't support it, with caniemail's notes.
+
+![Features tab: a feature expanded with code samples and per-client notes](docs/screenshots/04-features.png)
+
+### 4. Read the checks
+
+Problems found in the HTML itself (size, viewport, alt text, links) and in the rendered layout
+(overflow and the element causing it, contrast, text size, tap targets), with the devices and
+modes each one appeared on.
+
+![Checks tab: errors and warnings for the broken sample](docs/screenshots/05-checks.png)
+
+### 5. Scroll and click it in real engines
+
+**Live engines** runs the email in real WebKit, Chromium and Firefox pages on your machine and
+streams them into the app. Scroll, hover and click inside a tile; clicked links are shown
+instead of followed. Nothing is saved to disk.
+
+![Live engines tab: the newsletter scrolled in a WebKit iPhone tile next to a Chromium Android tile](docs/screenshots/08-live.png)
+
+### 6. Or connect your mail catcher
+
+Point it at Mailpit, MailHog or Mailtrap to browse and check what your app actually sends.
+
+![Inbox tab with a Mailpit connection form](docs/screenshots/09-inbox.png)
+
 ## Command line / CI
 
 ```bash
+npx email-lens check public/samples/broken-report.html
 npx email-lens check email.html
 npx email-lens check message.eml --clients "gmail.*,outlook.*,apple-mail.*" --min-score 80
 npx email-lens check email.html --render ./shots     # also writes 30 engine screenshots
@@ -73,9 +135,6 @@ To keep credentials out of the browser, define connections on the server instead
 | `mailhog` | `url`, optional basic auth | not yet; built to the MailHog v1/v2 API |
 | `mailtrap` | API `token`, `accountId`, `inboxId` (Email Sandbox) | not yet; built to the Sandbox API |
 
-**Frappe Manager benches** come with Mailpit at `http://<bench>/mailpit`, user `admin`, and the
-password is `admin_tools_password` in `~/frappe/sites/<bench>/bench_config.toml`.
-
 ## What it can and can't tell you
 
 - The compatibility scores come from caniemail's tests of each feature in each client. A feature
@@ -90,7 +149,7 @@ password is `admin_tools_password` in `~/frappe/sites/<bench>/bench_config.toml`
   Its column in **Clients** and **Features** lists what it will drop; to see it, use a Windows
   machine or a paid service (Litmus, Email on Acid, Testi@) before a major release.
 
-## How it works
+## Architecture
 
 | Path | What |
 |---|---|

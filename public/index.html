@@ -34,7 +34,11 @@
         <textarea id="paste-input" spellcheck="false" placeholder="<!doctype html>&#10;<html>…&#10;&#10;or paste a full .eml (headers + MIME body)"></textarea>
         <div class="row">
           <button id="paste-check" class="btn btn-primary" type="button">Check email</button>
-          <button id="paste-sample" class="btn btn-ghost" type="button">Load a sample</button>
+        </div>
+        <div class="row samples">
+          <span class="muted">Try a sample:</span>
+          <button class="btn btn-ghost btn-sm" type="button" data-sample="broken-report">Broken report</button>
+          <button class="btn btn-ghost btn-sm" type="button" data-sample="newsletter">Responsive newsletter</button>
         </div>
         <p class="hint">⌘/Ctrl + Enter to check. Nothing leaves your machine except image loads from the email itself.</p>
       </section>

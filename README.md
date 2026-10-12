@@ -3,7 +3,10 @@
 A free, local tool that checks whether an HTML email will survive real email clients and
 devices. It runs on your machine, and no email content is uploaded anywhere.
 
-![email-lens demo: checking a sample email across devices, modes, clients and real engines](docs/demo.gif)
+![email-lens: an email on phone, tablet and laptop, switching modes](docs/media/preview-1-stage.gif)
+
+▶ **[Watch the full tour](docs/media/tour.mp4)** (100 s, 2880×1800, 60 fps). Each section below
+also has its own full-resolution clip.
 
 - **Client support:** every HTML and CSS feature the email uses, checked against
   [caniemail.com](https://www.caniemail.com) data for ~48 clients (Gmail, Outlook, Apple Mail,
@@ -47,7 +50,7 @@ Open http://localhost:4600 and paste an email, drop an `.html`/`.eml` file anywh
 an inbox. Two samples are built in: **Ember Roasters**, a polished autumn-launch email built the
 robust way, and **Broken report**, which makes the classic mistakes.
 
-![Start screen](docs/screenshots/00-empty.png)
+![Start screen](<docs/media/shot-start.png>)
 
 ### 1. Your email on every screen
 
@@ -55,7 +58,9 @@ The email sits on a stage in phone, tablet and laptop frames, all at their true 
 and scaled together so you can compare them. The chip at the top right is the average client
 support score and the issue count. The dock at the bottom switches renderer, mode and devices.
 
-![Ember Roasters on iPhone, iPad and desktop](docs/screenshots/01-stage.png)
+![Ember Roasters on iPhone, iPad and desktop](<docs/media/shot-stage.png>)
+
+Video: [stage and devices](docs/media/clip-1-stage.mp4)
 
 ### 2. Switch modes to see what clients do to it
 
@@ -64,9 +69,13 @@ colour inversion of the Gmail and Outlook apps. *No `<style>`* removes embedded 
 for non-Google accounts. *Images off* blocks images, the default in many work inboxes. Keys
 `1`–`5` switch modes.
 
+![Switching between light, dark, forced dark, no style and images off](<docs/media/preview-2-modes.gif>)
+
 | Dark (Ember's own dark styles) | Forced dark (Gmail / Outlook apps) |
 |---|---|
-| ![Ember Roasters in dark mode](docs/screenshots/05-dark.png) | ![Broken report under forced dark](docs/screenshots/07-forced-dark.png) |
+| ![Ember Roasters in dark mode](<docs/media/shot-dark.png>) | ![Broken report under forced dark](<docs/media/shot-forced-dark.png>) |
+
+Video: [modes](docs/media/clip-2-modes.mp4)
 
 ### 3. Inspect: score, clients, features
 
@@ -75,11 +84,13 @@ least support. *Clients* scores all 48 clients from [caniemail.com](https://www.
 data; click one to see what it drops and why. *Features* lists every HTML/CSS feature the email
 uses, where, and which clients fall short.
 
-![Inspector overview](docs/screenshots/02-overview.png)
+![Opening the inspector: overview, a client's gaps, a feature, the code](<docs/media/preview-3-inspector.gif>)
 
-| Clients | Features |
-|---|---|
-| ![Clients with Gmail Android expanded](docs/screenshots/03-clients.png) | ![A feature expanded with code and per-family notes](docs/screenshots/04-features.png) |
+| Overview | Clients | Features |
+|---|---|---|
+| ![Inspector overview](<docs/media/shot-overview.png>) | ![Gmail Android expanded](<docs/media/shot-clients.png>) | ![A feature with code and per-family notes](<docs/media/shot-features.png>) |
+
+Video: [inspector](docs/media/clip-3-inspector.mp4)
 
 ### 4. Fix the issues
 
@@ -87,7 +98,11 @@ Each screen gets an OK or error badge from layout checks run on the rendered ema
 (and the element causing it), shrink-to-fit, contrast, text size, tap targets. *Issues* collects
 those plus checks on the HTML itself: Gmail's 102 KB clipping, viewport, alt text, links.
 
-![Broken report with its issues](docs/screenshots/06-issues.png)
+![The broken sample: error badges, then the issues list](<docs/media/preview-4-issues.gif>)
+
+![Broken report with its issues](<docs/media/shot-issues.png>)
+
+Video: [issues](docs/media/clip-4-issues.mp4)
 
 ### 5. Scroll and click it in real engines
 
@@ -95,17 +110,25 @@ those plus checks on the HTML itself: Gmail's 102 KB clipping, viewport, alt tex
 machine, streamed in. Scroll, hover and click inside a screen; clicked links are shown instead of
 followed. Nothing is saved to disk.
 
-![Ember Roasters live in WebKit and Chromium](docs/screenshots/08-live.png)
+![Scrolling the phone in WebKit and clicking a link in Chromium](<docs/media/preview-5-real-engines.gif>)
 
-### 6. Or connect your mail catcher
+![Ember Roasters live in WebKit and Chromium](<docs/media/shot-real-engines.png>)
 
-**Open email → Inbox** browses Mailpit, MailHog or Mailtrap so you can check what your app
-actually sends.
+Video: [real engines](docs/media/clip-5-real-engines.mp4)
 
-![Inbox connection](docs/screenshots/09-inbox.png)
+### 6. Open from anywhere
 
-The small slider button at the bottom right holds display tweaks: realistic or minimal frames,
-the stage backdrop, and fit-to-screen or 100% size.
+**Open email** takes pasted HTML or `.eml`, a file, or an inbox: browse Mailpit, MailHog or
+Mailtrap to check what your app actually sends.
+
+![The open sheet: paste, upload and an inbox connection](<docs/media/preview-6-open.gif>)
+
+![Inbox connection](<docs/media/shot-inbox.png>)
+
+Video: [opening emails](docs/media/clip-6-open.mp4)
+
+The slider button at the bottom right holds display tweaks: realistic or minimal frames, the
+stage backdrop, and fit-to-screen or 100% size.
 
 ## Command line / CI
 

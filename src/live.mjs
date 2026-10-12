@@ -45,7 +45,8 @@ class LiveSession {
         this.links.push(req.url());
         this.kick();
         this.flush();
-        return route.abort();
+        // 204 keeps the current document in every engine; abort() makes Chromium show an error page.
+        return route.fulfill({ status: 204, body: "" });
       }
       return route.continue();
     });
@@ -55,7 +56,7 @@ class LiveSession {
   async run() {
     while (!this.closed) {
       try {
-        const buf = await this.page.screenshot({ type: "jpeg", quality: 72 });
+        const buf = await this.page.screenshot({ type: "jpeg", quality: 85 });
         const s = await this.page.evaluate("[scrollY, document.documentElement.scrollHeight, innerHeight]");
         const changed = !this.frame || !buf.equals(this.frame) || s[0] !== this.scroll.y || s[1] !== this.scroll.height;
         this.scroll = { y: Math.round(s[0]), height: s[1], view: s[2] };

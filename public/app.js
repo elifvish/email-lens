@@ -287,7 +287,7 @@ function renderDevices() {
 function fitDevices() {
   const frames = $$("#devices .device");
   if (!frames.length) return;
-  for (const el of frames) $(".frame", el).style.zoom = "";
+  for (const el of frames) setZoom(el, 1);
   if (state.tweaks.size === "actual") return;
   const stage = $("#stage");
   const gap = parseFloat(getComputedStyle($("#devices")).columnGap) || 0;
@@ -299,13 +299,20 @@ function fitDevices() {
   // The laptop's base sticks out 64px on each side.
   const totalWidth = frames.reduce((n, el) => n + $(".frame", el).offsetWidth + ($(".base", el) ? 128 : 0), 0);
   const zoom = Math.max(0.2, Math.min(1, availableH / tallest, availableW / totalWidth));
-  for (const el of frames) $(".frame", el).style.zoom = String(zoom);
+  for (const el of frames) setZoom(el, zoom);
   // Labels can be wider than a small frame; shrink until the whole row fits the stage.
   const row = $("#devices");
   for (let i = 0, z = zoom; !narrow && i < 4 && row.scrollWidth > stage.clientWidth + 1 && z > 0.2; i++) {
     z = Math.max(0.2, z * (stage.clientWidth / row.scrollWidth) * 0.98);
-    for (const el of frames) $(".frame", el).style.zoom = String(z);
+    for (const el of frames) setZoom(el, z);
   }
+}
+
+/** Zoom a frame; --unzoom lets overlays inside it (link notes) stay at a readable size. */
+function setZoom(el, z) {
+  const frame = $(".frame", el);
+  frame.style.zoom = z === 1 ? "" : String(z);
+  frame.style.setProperty("--unzoom", String(1 / z));
 }
 
 function setIssueBadge(el, findings) {
@@ -525,7 +532,9 @@ function setupDock() {
         <span class="check"></span><span class="name">${esc(d.label)}</span><span class="meta">${d.width}px · ${esc(d.engine)}</span></button>`,
     ).join("");
     for (const item of $$(".pop-item", pop)) {
-      item.addEventListener("click", () => {
+      item.addEventListener("click", (e) => {
+        // The list re-renders below; keep this click from reaching the click-outside handler.
+        e.stopPropagation();
         const k = item.dataset.device;
         if (state.devices.has(k) && state.devices.size > 1) state.devices.delete(k);
         else state.devices.add(k);

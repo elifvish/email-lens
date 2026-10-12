@@ -154,7 +154,7 @@ body[data-frames="minimal"] .statusbar, body[data-frames="minimal"] .island, bod
 body[data-frames="minimal"] .homebar, body[data-frames="minimal"] .base, body[data-frames="minimal"] .chrome { display: none; }
 
 .screen-overlay { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; background: rgba(11, 12, 15, 0.82); color: var(--ink); font-size: 14px; }
-.link-note { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 4; padding: 8px 10px; border-radius: 9px; background: rgba(20, 22, 28, 0.94); color: var(--ink); font-size: 12px; line-height: 16px; overflow-wrap: anywhere; box-shadow: var(--shadow); }
+.link-note { position: absolute; left: calc(10px * var(--unzoom, 1)); right: calc(10px * var(--unzoom, 1)); bottom: calc(10px * var(--unzoom, 1)); z-index: 4; padding: calc(8px * var(--unzoom, 1)) calc(11px * var(--unzoom, 1)); border-radius: calc(9px * var(--unzoom, 1)); background: rgba(20, 22, 28, 0.94); color: var(--ink); font-size: calc(13px * var(--unzoom, 1)); line-height: 1.35; overflow-wrap: anywhere; box-shadow: var(--shadow); }
 .link-note a { color: var(--accent); }
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: -2px; margin-right: 8px; }
 @keyframes spin { to { transform: rotate(360deg); } }

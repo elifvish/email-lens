@@ -55,7 +55,7 @@ export async function openEmailPage(html, device, mode) {
   const browser = await engine(device.engine);
   const ctx = await browser.newContext({
     viewport: { width: device.width, height: device.height },
-    deviceScaleFactor: device.mobile ? 2 : 1,
+    deviceScaleFactor: 2,
     javaScriptEnabled: false,
     colorScheme: mode.key === "dark" ? "dark" : "light",
     ...(device.engine === "firefox" ? {} : { isMobile: device.mobile, hasTouch: device.mobile }),

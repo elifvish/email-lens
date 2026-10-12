@@ -1,0 +1,75 @@
+name: email-lens check
+description: Check HTML emails against 48 email clients (caniemail data) and fail the build on broken layouts.
+author: Vishal Kumar
+branding:
+  icon: mail
+  color: purple
+
+inputs:
+  files:
+    description: Files, directories or globs to check, space-separated (.html, .htm, .eml).
+    required: true
+  min-score:
+    description: Fail when any selected client supports less than this percentage of what an email uses.
+    required: false
+    default: ""
+  clients:
+    description: Comma-separated client globs to score, e.g. "gmail.*,outlook.*".
+    required: false
+    default: "gmail.*,outlook.*,apple-mail.*,yahoo.*,samsung-email.*,thunderbird.*"
+  render:
+    description: Also render every email in WebKit, Chromium and Firefox, run layout checks there, and upload the screenshots as an artifact.
+    required: false
+    default: "false"
+
+outputs:
+  report:
+    description: Path to the Markdown report.
+    value: ${{ steps.check.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Install email-lens
+      shell: bash
+      run: |
+        if [ "${{ inputs.render }}" = "true" ]; then
+          npm ci --prefix "$GITHUB_ACTION_PATH" --omit=dev --no-audit --no-fund
+          node "$GITHUB_ACTION_PATH/node_modules/playwright/cli.js" install --with-deps chromium webkit firefox
+        else
+          npm ci --prefix "$GITHUB_ACTION_PATH" --omit=dev --omit=optional --no-audit --no-fund
+        fi
+
+    - name: Check emails
+      id: check
+      shell: bash
+      env:
+        FILES: ${{ inputs.files }}
+        MIN_SCORE: ${{ inputs.min-score }}
+        CLIENTS: ${{ inputs.clients }}
+        RENDER: ${{ inputs.render }}
+      run: |
+        report="$RUNNER_TEMP/email-lens-report.md"
+        args=(--format markdown --clients "$CLIENTS")
+        [ -n "$MIN_SCORE" ] && args+=(--min-score "$MIN_SCORE")
+        [ "$RENDER" = "true" ] && args+=(--render "$RUNNER_TEMP/email-lens-screenshots")
+        set +e
+        # FILES is intentionally word-split so several paths and globs can be passed.
+        node "$GITHUB_ACTION_PATH/bin/email-lens.mjs" check $FILES "${args[@]}" > "$report"
+        status=$?
+        set -e
+        cat "$report" >> "$GITHUB_STEP_SUMMARY"
+        echo "report=$report" >> "$GITHUB_OUTPUT"
+        exit $status
+
+    - name: Upload screenshots
+      if: ${{ always() && inputs.render == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: email-lens-screenshots
+        path: ${{ runner.temp }}/email-lens-screenshots
+        if-no-files-found: ignore

@@ -1,15 +1,23 @@
+<div align="center">
+
 # email-lens
 
-A free, local tool that checks whether an HTML email will survive real email clients and
-devices. It runs on your machine, and no email content is uploaded anywhere.
+**See your email on every screen.** An open-source, local alternative to Litmus and Email on Acid.
+
+[![npm](https://img.shields.io/npm/v/email-lens?color=a99bff&label=npm)](https://www.npmjs.com/package/email-lens)
+[![CI](https://github.com/elifvish/email-lens/actions/workflows/ci.yml/badge.svg)](https://github.com/elifvish/email-lens/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-a99bff)](LICENSE)
+
+**[Try the live demo](https://elifvish.github.io/email-lens/)** · **[Watch the videos](https://elifvish.github.io/email-lens/videos.html)** · `npx email-lens`
+
+</div>
 
 ![email-lens: an email on phone, tablet and laptop, switching modes](docs/media/preview-1-stage.gif)
 
-▶ **[Watch the full tour](docs/media/tour.mp4)** (100 s, 2880×1800, 60 fps). Each section below
-also has its own full-resolution clip.
+Paste an email, drop an `.eml`, or connect your mail catcher, and email-lens shows you:
 
 - **Client support:** every HTML and CSS feature the email uses, checked against
-  [caniemail.com](https://www.caniemail.com) data for ~48 clients (Gmail, Outlook, Apple Mail,
+  [caniemail.com](https://www.caniemail.com) data for 48 clients (Gmail, Outlook, Apple Mail,
   Yahoo, Samsung Email, Thunderbird, AOL, ProtonMail and more), each scored, with the notes
   explaining *how* support is partial.
 - **Device previews:** iPhone SE (320px) to desktop, in five modes: light, dark
@@ -17,24 +25,64 @@ also has its own full-resolution clip.
   no `<style>` (Gmail with non-Google accounts) and images off.
 - **Real engines:** the email running in real WebKit (Apple Mail / iOS Mail), Chromium (webmail,
   Android) and Gecko (Thunderbird) pages, streamed into the device frames so you can scroll, hover
-  and click (links are shown, not followed). Scripts are off, as in every email client.
+  and click. Scripts are off, as in every email client.
 - **Checks:** content overflowing phone screens (and which element causes it), Gmail's 102 KB
   clipping, low contrast in light and dark, text iOS will resize, small buttons, missing alt text,
-  local/broken images and links, missing plain-text part, and more.
+  broken or local images and links, missing plain-text part, and more.
 
-Email sources: paste HTML or a raw `.eml`, upload a file, or connect **Mailpit**, **MailHog** or
-**Mailtrap**.
+Nothing is uploaded anywhere: it runs on your machine, and the only network requests are the
+email's own images.
+
+## How it compares
+
+| | email-lens | Litmus | Email on Acid | Testi@ |
+|---|---|---|---|---|
+| Price | Free, MIT | Paid subscription | Paid subscription | Free tier, paid plans |
+| Runs locally, nothing uploaded | ✅ | ❌ | ❌ | ❌ |
+| Client support scores (caniemail) | ✅ 48 clients | ✅ | ✅ | ✅ |
+| Rendering | Real WebKit, Chromium, Gecko: live, scroll and click | Screenshots from real clients | Screenshots from real clients | Screenshots from real clients |
+| Outlook for Windows (Word engine) renders | ❌ ([why](#what-it-can-and-cant-tell-you)) | ✅ | ✅ | ✅ |
+| Gmail / Outlook dark-mode and CSS-stripping simulation | ✅ | ✅ | ✅ | partial |
+| Free CLI and GitHub Action for CI | ✅ | — | — | — |
+| Mailpit / MailHog / Mailtrap inbox | ✅ | ❌ | ❌ | ❌ |
+
+Check each site for current plans. The paid tools render on real devices, including Outlook for
+Windows, so they remain worth it for a final check before a big send.
 
 ## Quick start
 
 ```bash
-npm install
-npm run browsers      # once: downloads WebKit, Chromium and Firefox for Real engines (optional)
-npm start             # → http://localhost:4600
+npx email-lens                      # opens the app at http://localhost:4600
+npx email-lens install-browsers     # once, for Real engines (about 300 MB; optional)
 ```
 
-Without `npm run browsers` everything works except **Real engines**. The previews then
-render in your own browser only.
+Needs Node 22 or later. Without the browsers everything works except **Real engines**.
+
+**Docker**, with all three engines included:
+
+```bash
+docker run --rm -p 4600:4600 ghcr.io/elifvish/email-lens
+```
+
+Inside Docker, reach a Mailpit running on your machine at `http://host.docker.internal:8025`.
+
+**In CI**, as a GitHub Action that fails the build on broken emails and posts a report to the
+job summary:
+
+```yaml
+- uses: elifvish/email-lens@v0
+  with:
+    files: emails/**/*.html
+    min-score: 70          # optional: fail if a major client supports less than 70%
+    render: false          # true: also render in real engines and upload screenshots
+```
+
+**From source:**
+
+```bash
+git clone https://github.com/elifvish/email-lens && cd email-lens
+npm install && npm run browsers && npm start
+```
 
 ### Nothing is stored
 
@@ -133,12 +181,12 @@ stage backdrop, and fit-to-screen or 100% size.
 ## Command line / CI
 
 ```bash
-npx email-lens check public/samples/broken-report.html
-npx email-lens check public/samples/ember-roasters.html
+npx email-lens check emails/                       # every .html/.htm/.eml under a folder
+npx email-lens check "emails/**/*.html" --format markdown > report.md
 npx email-lens check email.html
 npx email-lens check message.eml --clients "gmail.*,outlook.*,apple-mail.*" --min-score 80
 npx email-lens check email.html --render ./shots     # also writes 30 engine screenshots
-npx email-lens check email.html --json > report.json
+npx email-lens check email.html --format json > report.json
 npx email-lens update-data                            # refresh caniemail data
 ```
 
@@ -196,6 +244,10 @@ To keep credentials out of the browser, define connections on the server instead
 
 The existing npm checkers (`caniemail`, `doiuse-email`) throw on ordinary emails whenever a client
 has no data for a feature, so email-lens has its own matcher and reports those as "untested".
+
+## Contributing
+
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Tests
 

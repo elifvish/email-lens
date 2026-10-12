@@ -88,6 +88,12 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .tone-warn { background: var(--warn-soft); color: var(--warn); }
 .tone-bad { background: var(--bad-soft); color: var(--bad); }
 
+body.static .needs-server { display: none !important; }
+.demo-pill { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12.5px; text-decoration: none; white-space: nowrap; }
+.demo-pill code { font: 12px var(--mono); color: var(--ink); }
+.demo-pill:hover { background: rgba(169, 155, 255, 0.22); }
+@media (max-width: 1100px) { .demo-pill { display: none !important; } }
+
 /* ---------- Stage ---------- */
 .stage { position: fixed; inset: 0; overflow: auto; background: var(--stage); }
 body[data-stage="dots"] .stage { background-image: radial-gradient(var(--stage-dot) 1px, transparent 1px); background-size: 22px 22px; }

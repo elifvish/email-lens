@@ -15,7 +15,7 @@ function shortSrc(src = "") {
 export function lint({ html, text = null }) {
   const out = [];
   const add = (level, check, message, help = null) => out.push({ level, check, message, help });
-  const bytes = Buffer.byteLength(html);
+  const bytes = new TextEncoder().encode(html).length;
   const kb = (bytes / 1024).toFixed(1);
 
   if (bytes > GMAIL_CLIP_BYTES) add("error", "size", `HTML is ${kb} KB. Gmail clips anything over 102 KB and hides the rest behind "[Message clipped]".`);

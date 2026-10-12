@@ -8,23 +8,26 @@
  * Unlike the npm checkers, a client with no data for a feature is reported as "unknown"
  * instead of throwing.
  */
-import { readFileSync } from "node:fs";
 import { parse as parseSelector } from "css-what";
 import { parseDocument } from "htmlparser2";
 import postcss from "postcss";
-import { DATA_FILE } from "./paths.mjs";
 
 let DATA = null;
 let BY_SLUG = null;
 
-export function loadData(file = DATA_FILE) {
-  DATA = JSON.parse(readFileSync(file, "utf8"));
+/**
+ * Install the caniemail dataset. Node loads it from disk (src/data.mjs, imported for its side
+ * effect); the browser demo bundles it. The engine itself has no I/O so it runs in both.
+ */
+export function useData(json) {
+  DATA = json;
   BY_SLUG = new Map(DATA.data.map((f) => [f.slug, f]));
   return DATA;
 }
 
 function data() {
-  return DATA ?? loadData();
+  if (!DATA) throw new Error("caniemail data not loaded: import src/data.mjs or call useData()");
+  return DATA;
 }
 
 export function dataInfo() {

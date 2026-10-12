@@ -1,9 +1,14 @@
-/** Refresh the bundled caniemail.com dataset. */
-import { renameSync, writeFileSync } from "node:fs";
-import { dataInfo, loadData } from "./compat.mjs";
+/** Load and refresh the bundled caniemail.com dataset (Node only). Importing this loads it. */
+import { readFileSync, renameSync, writeFileSync } from "node:fs";
+import { dataInfo, useData } from "./compat.mjs";
 import { DATA_FILE } from "./paths.mjs";
 
 const SOURCE = "https://www.caniemail.com/api/data.json";
+
+export function loadDataFile(file = DATA_FILE) {
+  return useData(JSON.parse(readFileSync(file, "utf8")));
+}
+loadDataFile();
 
 export async function updateData() {
   const res = await fetch(SOURCE, { signal: AbortSignal.timeout(30000) });
@@ -14,6 +19,6 @@ export async function updateData() {
   const tmp = `${DATA_FILE}.tmp`;
   writeFileSync(tmp, text);
   renameSync(tmp, DATA_FILE);
-  loadData();
+  loadDataFile();
   return dataInfo();
 }

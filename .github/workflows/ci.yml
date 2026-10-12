@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --omit=optional
+      - run: npm test
+      - run: node scripts/build-site.mjs
+
+  action:
+    name: Action (dogfood)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: A good email passes
+        uses: ./
+        with:
+          files: public/samples/ember-roasters.html
+          min-score: 60
+
+      - name: A broken email fails
+        id: broken
+        continue-on-error: true
+        uses: ./
+        with:
+          files: public/samples/broken-report.html
+          min-score: 60
+
+      - name: Expect the broken email to fail
+        if: steps.broken.outcome != 'failure'
+        run: echo "broken-report.html should have failed the check" && exit 1

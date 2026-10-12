@@ -1,0 +1,25 @@
+name: Client quirk
+description: A real email client renders something differently from what email-lens predicts.
+labels: [client-quirk]
+body:
+  - type: input
+    id: client
+    attributes:
+      label: Client and version
+      placeholder: "Gmail Android app 2026.09, Outlook for Windows (Microsoft 365)"
+    validations:
+      required: true
+  - type: textarea
+    id: html
+    attributes:
+      label: Minimal HTML that shows it
+      render: html
+    validations:
+      required: true
+  - type: textarea
+    id: difference
+    attributes:
+      label: What the client does vs what email-lens shows
+      description: Screenshots of both help a lot.
+    validations:
+      required: true

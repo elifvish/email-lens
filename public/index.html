@@ -30,6 +30,7 @@
       </button>
     </div>
     <div class="bar-right">
+      <a id="demo-pill" class="demo-pill" href="https://github.com/elifvish/email-lens#quick-start" target="_blank" rel="noopener" hidden>Live demo · <code>npx email-lens</code> for real engines</a>
       <button id="verdict" class="verdict" type="button" hidden aria-label="Open the inspector">
         <span id="verdict-score" class="verdict-score"></span>
         <span id="verdict-text" class="verdict-text"></span>
@@ -45,7 +46,7 @@
       <p>Phones, tablets and desktop, in light, dark and the ways Gmail and Outlook rewrite it. With support scores for 48 email clients, from caniemail.com data.</p>
       <div class="empty-actions">
         <button class="btn btn-primary btn-lg" type="button" data-open="paste">Open email</button>
-        <button class="btn btn-ghost btn-lg" type="button" data-open="inbox">Connect an inbox</button>
+        <button class="btn btn-ghost btn-lg needs-server" type="button" data-open="inbox">Connect an inbox</button>
       </div>
       <div class="sample-row">
         <span>Or try a sample</span>
@@ -113,7 +114,7 @@
       <nav class="sheet-tabs" role="tablist">
         <button role="tab" data-src="paste" aria-selected="true">Paste</button>
         <button role="tab" data-src="upload" aria-selected="false">Upload</button>
-        <button role="tab" data-src="inbox" aria-selected="false">Inbox</button>
+        <button role="tab" data-src="inbox" aria-selected="false" class="needs-server">Inbox</button>
       </nav>
       <button class="icon-btn" type="button" data-close-sheet aria-label="Close"><svg><use href="#i-close"/></svg></button>
     </div>

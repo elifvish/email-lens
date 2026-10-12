@@ -74,7 +74,17 @@ if (!state.devices.size) state.devices = new Set(["iphone", "ipad", "desktop"]);
 // ---------------------------------------------------------------------------------------
 // Plumbing
 
+let staticEngine = null;
+const LOCAL_ONLY = "That needs the local app: run `npx email-lens` for .eml files, inboxes and real engines.";
+
 async function api(path, body) {
+  // The GitHub Pages demo has no server: analysis runs in the browser, the rest needs the local app.
+  if (window.EMAIL_LENS_STATIC) {
+    staticEngine ??= await import("./engine.js");
+    if (path === "/api/info") return staticEngine.info();
+    if (path === "/api/analyze") return staticEngine.analyze(body.html, body.text ?? null);
+    throw new Error(LOCAL_ONLY);
+  }
   const res = await fetch(path, body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
   if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
@@ -125,11 +135,14 @@ async function init() {
     toast(`Can't reach the email-lens server: ${e.message}`, true);
     return;
   }
-  setupInbox();
   const live = $('[data-renderer="live"]');
+  if (state.info.static) {
+    document.body.classList.add("static");
+    $("#demo-pill").hidden = false;
+  } else setupInbox();
   if (!state.info.render.available) {
     live.disabled = true;
-    live.title = "Install the engines with `npm run browsers`, then restart the server";
+    live.title = state.info.static ? "Real engines run in the local app: npx email-lens" : "Install the engines with `npx email-lens install-browsers`, then restart";
   }
   window.addEventListener("resize", debounce(fitDevices, 120));
 }
@@ -897,6 +910,7 @@ function setupInbox() {
 }
 
 function renderConnForm() {
+  if (!$("#conn-select").value) return;
   const [kind, ref] = $("#conn-select").value.split(":");
   const form = $("#conn-form");
   $("#conn-remember-wrap").hidden = kind === "saved";

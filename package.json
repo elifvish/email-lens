@@ -1,18 +1,59 @@
 {
   "name": "email-lens",
   "version": "0.1.0",
-  "description": "Free, local email client compatibility checker and cross-device previewer. Paste HTML, upload .eml, or connect Mailpit, MailHog or Mailtrap.",
-  "type": "module",
+  "description": "Open-source, local alternative to Litmus: check HTML emails against 48 email clients (caniemail data) and preview them on phones, tablets and desktop in light, dark and Gmail/Outlook modes, with live WebKit, Chromium and Firefox views.",
+  "keywords": [
+    "email",
+    "html-email",
+    "email-testing",
+    "email-preview",
+    "caniemail",
+    "litmus-alternative",
+    "email-on-acid-alternative",
+    "dark-mode",
+    "mailpit",
+    "mailhog",
+    "mailtrap",
+    "playwright",
+    "mjml",
+    "outlook",
+    "gmail",
+    "cli",
+    "ci"
+  ],
+  "homepage": "https://elifvish.github.io/email-lens/",
+  "bugs": {
+    "url": "https://github.com/elifvish/email-lens/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elifvish/email-lens.git"
+  },
   "license": "MIT",
-  "bin": { "email-lens": "bin/email-lens.mjs" },
+  "author": "Vishal Kumar",
+  "type": "module",
+  "bin": {
+    "email-lens": "bin/email-lens.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "public/",
+    "data/caniemail.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "start": "node bin/email-lens.mjs serve",
+    "start": "node bin/email-lens.mjs serve --open",
     "check": "node bin/email-lens.mjs check",
     "update-data": "node bin/email-lens.mjs update-data",
-    "browsers": "playwright install chromium webkit firefox",
+    "browsers": "node bin/email-lens.mjs install-browsers",
+    "build:site": "node scripts/build-site.mjs",
     "test": "node --test test/*.test.mjs"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "css-what": "^7.0.0",
     "htmlparser2": "^10.0.0",
@@ -21,5 +62,8 @@
   },
   "optionalDependencies": {
     "playwright": "1.63.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

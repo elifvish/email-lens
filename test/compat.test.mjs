@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { checkCompat, detectFeatures, listClients, supportOn } from "../src/compat.mjs";
+import "../src/data.mjs";
 
 const slugs = (html) => [...detectFeatures(html).keys()];
 

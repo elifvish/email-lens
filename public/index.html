@@ -4,160 +4,169 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>email-lens</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='26' height='18' rx='3' fill='%234f46e5'/%3E%3Cpath d='M4 9l12 9 12-9' stroke='white' stroke-width='2.4' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316181d'/%3E%3Cpath d='M8 11h16v10H8z' fill='none' stroke='%23a99bff' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M8 11l8 6 8-6' fill='none' stroke='%23a99bff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="app.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="26" height="18" rx="3"/><path d="M4 9l12 9 12-9"/></svg>
-      <span>email-lens</span>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M4 7h16v10H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-open" viewBox="0 0 20 20"><path d="M3 6.5V15a1 1 0 001 1h12a1 1 0 001-1V8a1 1 0 00-1-1h-6L8.5 5H4a1 1 0 00-1 1.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-devices" viewBox="0 0 20 20"><rect x="2.5" y="4" width="11" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 15h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="14.5" y="7" width="4" height="9" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-inspect" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v14" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 20 20"><path d="M6 8l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 20 20"><path d="M3 7a1.5 1.5 0 011.5-1.5h2L8 4h4l1.5 1.5h2A1.5 1.5 0 0117 7v7.5a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 013 14.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="10.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-top" viewBox="0 0 20 20"><path d="M5 4h10M10 16V8M6.5 11.5L10 8l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7.5 9.5L12 5l4.5 4.5M5 15v3a1 1 0 001 1h12a1 1 0 001-1v-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tweak" viewBox="0 0 20 20"><path d="M4 6h7M15 6h1M4 14h1M9 14h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="13" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="14" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  </svg>
+
+  <header class="bar">
+    <div class="bar-left">
+      <span class="brand"><svg><use href="#i-logo"/></svg><span class="brand-text">email-lens</span></span>
+      <button id="title-btn" class="title-btn" type="button" hidden>
+        <span id="title-text"></span><svg><use href="#i-chevron"/></svg>
+      </button>
     </div>
-    <div class="topbar-meta">
-      <span id="data-info" class="muted"></span>
-      <button id="update-data" class="btn btn-ghost btn-sm" type="button">Update data</button>
-      <span id="engine-info" class="pill"></span>
+    <div class="bar-right">
+      <button id="verdict" class="verdict" type="button" hidden aria-label="Open the inspector">
+        <span id="verdict-score" class="verdict-score"></span>
+        <span id="verdict-text" class="verdict-text"></span>
+      </button>
+      <button id="open-btn" class="btn btn-ghost" type="button" aria-label="Open email" hidden><svg><use href="#i-open"/></svg><span class="btn-text">Open email</span></button>
     </div>
   </header>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="seg" role="tablist" aria-label="Email source">
+  <main id="stage" class="stage">
+    <section id="empty" class="empty">
+      <div class="empty-mark"><svg><use href="#i-logo"/></svg></div>
+      <h1>See your email on every screen</h1>
+      <p>Phones, tablets and desktop, in light, dark and the ways Gmail and Outlook rewrite it. With support scores for 48 email clients, from caniemail.com data.</p>
+      <div class="empty-actions">
+        <button class="btn btn-primary btn-lg" type="button" data-open="paste">Open email</button>
+        <button class="btn btn-ghost btn-lg" type="button" data-open="inbox">Connect an inbox</button>
+      </div>
+      <div class="sample-row">
+        <span>Or try a sample</span>
+        <button class="link-btn" type="button" data-sample="ember-roasters">Ember Roasters</button>
+        <button class="link-btn" type="button" data-sample="broken-report">Broken report</button>
+      </div>
+      <p class="empty-hint">Drop an .html or .eml file anywhere.</p>
+    </section>
+    <div id="devices" class="devices" hidden></div>
+  </main>
+
+  <div id="dock" class="dock" hidden>
+    <div class="seg" role="radiogroup" aria-label="Renderer" id="renderer-seg">
+      <button type="button" role="radio" data-renderer="preview" aria-checked="true" title="Instant previews in this browser">Preview</button>
+      <button type="button" role="radio" data-renderer="live" aria-checked="false" title="Real WebKit, Chromium and Firefox pages, streamed">Real engines</button>
+    </div>
+    <span class="dock-sep"></span>
+    <div class="seg" role="radiogroup" aria-label="Mode" id="mode-seg"></div>
+    <span class="dock-sep"></span>
+    <div class="pop-anchor">
+      <button id="devices-btn" class="dock-btn" type="button" aria-haspopup="true" aria-expanded="false"><svg><use href="#i-devices"/></svg><span id="devices-count"></span></button>
+      <div id="devices-pop" class="popover" hidden></div>
+    </div>
+    <button id="inspect-btn" class="dock-btn" type="button" aria-pressed="false"><svg><use href="#i-inspect"/></svg>Inspect<span id="inspect-count" class="count" hidden></span></button>
+  </div>
+  <p id="mode-note" class="mode-note" hidden></p>
+
+  <aside id="inspector" class="inspector" aria-label="Inspector" hidden>
+    <div class="insp-head">
+      <nav class="insp-tabs" role="tablist">
+        <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+        <button role="tab" data-tab="clients" aria-selected="false">Clients</button>
+        <button role="tab" data-tab="features" aria-selected="false">Features</button>
+        <button role="tab" data-tab="issues" aria-selected="false">Issues</button>
+        <button role="tab" data-tab="code" aria-selected="false">Code</button>
+      </nav>
+      <button id="insp-close" class="icon-btn" type="button" aria-label="Close inspector"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div class="insp-body">
+      <section data-panel="overview"></section>
+      <section data-panel="clients" hidden>
+        <label class="toggle"><input id="clients-all" type="checkbox"> Show all 48 clients</label>
+        <div id="clients"></div>
+      </section>
+      <section data-panel="features" hidden>
+        <div class="filter-row">
+          <input id="features-filter" type="search" placeholder="Filter features">
+          <label class="toggle"><input id="features-all" type="checkbox"> Include fully supported</label>
+        </div>
+        <div id="features"></div>
+      </section>
+      <section data-panel="issues" hidden><div id="issues"></div></section>
+      <section data-panel="code" hidden>
+        <div class="filter-row">
+          <span id="code-size" class="faint"></span>
+          <button id="copy-code" class="btn btn-ghost btn-sm" type="button">Copy HTML</button>
+        </div>
+        <pre id="code" class="code"></pre>
+      </section>
+    </div>
+  </aside>
+
+  <dialog id="sheet" class="sheet" aria-label="Open an email">
+    <div class="sheet-head">
+      <nav class="sheet-tabs" role="tablist">
         <button role="tab" data-src="paste" aria-selected="true">Paste</button>
         <button role="tab" data-src="upload" aria-selected="false">Upload</button>
         <button role="tab" data-src="inbox" aria-selected="false">Inbox</button>
+      </nav>
+      <button class="icon-btn" type="button" data-close-sheet aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    </div>
+
+    <section data-src-panel="paste" class="sheet-body">
+      <textarea id="paste-input" spellcheck="false" placeholder="Paste the email's HTML, or a full .eml with headers"></textarea>
+      <div class="sheet-foot">
+        <div class="sample-row">
+          <span>Samples</span>
+          <button class="link-btn" type="button" data-sample="ember-roasters">Ember Roasters</button>
+          <button class="link-btn" type="button" data-sample="broken-report">Broken report</button>
+        </div>
+        <button id="paste-check" class="btn btn-primary" type="button">Check email <kbd>⌘↵</kbd></button>
       </div>
+    </section>
 
-      <section data-src-panel="paste">
-        <label class="field-label" for="paste-input">HTML or raw .eml source</label>
-        <textarea id="paste-input" spellcheck="false" placeholder="<!doctype html>&#10;<html>…&#10;&#10;or paste a full .eml (headers + MIME body)"></textarea>
-        <div class="row">
-          <button id="paste-check" class="btn btn-primary" type="button">Check email</button>
-        </div>
-        <div class="row samples">
-          <span class="muted">Try a sample:</span>
-          <button class="btn btn-ghost btn-sm" type="button" data-sample="broken-report">Broken report</button>
-          <button class="btn btn-ghost btn-sm" type="button" data-sample="newsletter">Responsive newsletter</button>
-        </div>
-        <p class="hint">⌘/Ctrl + Enter to check. Nothing leaves your machine except image loads from the email itself.</p>
-      </section>
+    <section data-src-panel="upload" class="sheet-body" hidden>
+      <label id="dropzone" class="dropzone" for="file-input">
+        <input id="file-input" type="file" accept=".html,.htm,.eml,text/html,message/rfc822" hidden>
+        <svg><use href="#i-upload"/></svg>
+        <strong>Choose an .html or .eml file</strong>
+        <span>or drop it anywhere on the page</span>
+      </label>
+    </section>
 
-      <section data-src-panel="upload" hidden>
-        <label id="dropzone" class="dropzone" for="file-input">
-          <input id="file-input" type="file" accept=".html,.htm,.eml,text/html,message/rfc822" hidden>
-          <strong>Drop an .html or .eml file</strong>
-          <span class="muted">or click to choose</span>
-        </label>
-      </section>
-
-      <section data-src-panel="inbox" hidden>
-        <label class="field-label" for="conn-select">Connection</label>
-        <select id="conn-select"></select>
-        <form id="conn-form" class="conn-form" autocomplete="off"></form>
-        <div class="row">
+    <section data-src-panel="inbox" class="sheet-body" hidden>
+      <div class="inbox-grid">
+        <div class="inbox-conn">
+          <label class="field">Connection<select id="conn-select"></select></label>
+          <form id="conn-form" class="conn-form" autocomplete="off"></form>
+          <label class="toggle" id="conn-remember-wrap"><input id="conn-remember" type="checkbox"> Remember in this browser</label>
           <button id="conn-connect" class="btn btn-primary" type="button">Connect</button>
-          <label class="check"><input id="conn-remember" type="checkbox"> Remember in this browser</label>
+          <p id="inbox-status" class="faint"></p>
         </div>
-        <div id="inbox-browser" hidden>
-          <input id="inbox-search" type="search" placeholder="Search (subject, to:, from:)">
-          <ul id="inbox-list" class="inbox-list"></ul>
+        <div class="inbox-list-wrap">
+          <input id="inbox-search" type="search" placeholder="Search messages" disabled>
+          <ul id="inbox-list" class="inbox-list"><li class="inbox-empty">Connect to see messages.</li></ul>
         </div>
-        <p id="inbox-status" class="hint"></p>
-      </section>
-    </aside>
-
-    <main class="main">
-      <div id="empty" class="empty">
-        <h1>Will this email hold up everywhere?</h1>
-        <p>Paste HTML, drop an .eml, or connect Mailpit, MailHog or Mailtrap. email-lens shows:</p>
-        <ul>
-          <li><strong>Client support</strong> for every HTML and CSS feature the email uses, across ~45 clients (caniemail.com data)</li>
-          <li><strong>Device previews</strong> from 320px phones to desktop, in light, dark, forced-dark, stripped-CSS and images-off modes</li>
-          <li><strong>Live engines</strong>: scroll and click the email in real WebKit (Apple Mail), Chromium (webmail, Android) and Gecko (Thunderbird)</li>
-          <li><strong>Checks</strong> for overflow on phones, Gmail clipping, contrast, tap targets, alt text and more</li>
-        </ul>
       </div>
+    </section>
+  </dialog>
 
-      <div id="result" hidden>
-        <div class="summary">
-          <div class="summary-text">
-            <h1 id="r-subject"></h1>
-            <p id="r-meta" class="muted"></p>
-          </div>
-          <div class="summary-stats">
-            <div class="stat"><span id="r-score" class="stat-value"></span><span class="stat-label">avg. client support</span></div>
-            <div class="stat"><span id="r-worst" class="stat-value"></span><span id="r-worst-label" class="stat-label">lowest</span></div>
-            <div class="stat"><span id="r-errors" class="stat-value"></span><span class="stat-label">errors</span></div>
-            <div class="stat"><span id="r-warns" class="stat-value"></span><span class="stat-label">warnings</span></div>
-          </div>
-        </div>
+  <div id="drop-overlay" class="drop-overlay" hidden><div><svg><use href="#i-upload"/></svg>Drop to check this email</div></div>
 
-        <nav class="tabs" role="tablist" aria-label="Report">
-          <button role="tab" data-tab="preview" aria-selected="true">Preview</button>
-          <button role="tab" data-tab="clients" aria-selected="false">Clients</button>
-          <button role="tab" data-tab="features" aria-selected="false">Features</button>
-          <button role="tab" data-tab="checks" aria-selected="false">Checks <span id="checks-count" class="count"></span></button>
-          <button role="tab" data-tab="live" aria-selected="false">Live engines</button>
-          <button role="tab" data-tab="source" aria-selected="false">Source</button>
-        </nav>
-
-        <section data-tab-panel="preview">
-          <div class="toolbar">
-            <div id="device-chips" class="chips" aria-label="Devices"></div>
-            <div id="mode-seg" class="seg seg-sm" role="radiogroup" aria-label="Mode"></div>
-          </div>
-          <p id="mode-note" class="hint"></p>
-          <div id="frames" class="frames"></div>
-        </section>
-
-        <section data-tab-panel="clients" hidden>
-          <div class="toolbar">
-            <label class="check"><input id="clients-key" type="checkbox" checked> Major clients only</label>
-            <span class="muted legend"><i class="dot y"></i>supported <i class="dot a"></i>partial <i class="dot n"></i>unsupported <i class="dot u"></i>untested</span>
-          </div>
-          <div id="clients" class="client-grid"></div>
-        </section>
-
-        <section data-tab-panel="features" hidden>
-          <div class="toolbar">
-            <label class="check"><input id="features-problems" type="checkbox" checked> Only features with gaps</label>
-            <input id="features-filter" type="search" placeholder="Filter features">
-          </div>
-          <div id="features"></div>
-        </section>
-
-        <section data-tab-panel="checks" hidden>
-          <div id="checks"></div>
-        </section>
-
-        <section data-tab-panel="live" hidden>
-          <div class="toolbar">
-            <div id="live-device-chips" class="chips" aria-label="Devices"></div>
-            <div id="live-mode-seg" class="seg seg-sm" role="radiogroup" aria-label="Mode"></div>
-          </div>
-          <div class="toolbar">
-            <div class="row">
-              <button id="live-start" class="btn btn-primary" type="button">Start live view</button>
-              <button id="live-stop" class="btn btn-ghost" type="button" hidden>Stop</button>
-            </div>
-            <span id="live-status" class="muted"></span>
-          </div>
-          <p class="hint">Each tile is a real engine running on this machine with scripts off, as in email clients: WebKit for Apple Mail and iOS Mail, Chromium for webmail and Android apps, Gecko for Thunderbird. Scroll, hover and click inside a tile; clicked links are shown, not followed. Nothing is saved: tiles close when you switch emails or leave the page, and <em>Snapshot</em> opens a full-length image in a new tab without storing it.</p>
-          <div id="live-tiles" class="frames"></div>
-        </section>
-
-        <section data-tab-panel="source" hidden>
-          <div class="toolbar">
-            <button id="copy-source" class="btn btn-ghost btn-sm" type="button">Copy HTML</button>
-            <span id="source-size" class="muted"></span>
-          </div>
-          <pre id="source" class="source"></pre>
-          <details id="text-part" hidden><summary>Plain-text part</summary><pre id="source-text" class="source"></pre></details>
-        </section>
-      </div>
-    </main>
+  <div class="tweaks">
+    <button id="tweaks-btn" class="tweaks-btn" type="button" aria-expanded="false" aria-label="Display tweaks"><svg><use href="#i-tweak"/></svg></button>
+    <div id="tweaks-panel" class="tweaks-panel" hidden>
+      <div class="tweak"><span>Frames</span><div class="seg seg-sm" data-tweak="frames"><button type="button" data-value="real">Realistic</button><button type="button" data-value="minimal">Minimal</button></div></div>
+      <div class="tweak"><span>Stage</span><div class="seg seg-sm" data-tweak="stage"><button type="button" data-value="dots">Dots</button><button type="button" data-value="plain">Plain</button><button type="button" data-value="light">Light</button></div></div>
+      <div class="tweak"><span>Size</span><div class="seg seg-sm" data-tweak="size"><button type="button" data-value="fit">Fit</button><button type="button" data-value="actual">100%</button></div></div>
+    </div>
   </div>
+
   <div id="toast" class="toast" role="status" hidden></div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 A free, local tool that checks whether an HTML email will survive real email clients and
 devices. It runs on your machine, and no email content is uploaded anywhere.
 
-![email-lens demo: checking a sample email across devices, modes, clients and live engines](docs/demo.gif)
+![email-lens demo: checking a sample email across devices, modes, clients and real engines](docs/demo.gif)
 
 - **Client support:** every HTML and CSS feature the email uses, checked against
   [caniemail.com](https://www.caniemail.com) data for ~48 clients (Gmail, Outlook, Apple Mail,
@@ -12,9 +12,9 @@ devices. It runs on your machine, and no email content is uploaded anywhere.
 - **Device previews:** iPhone SE (320px) to desktop, in five modes: light, dark
   (`prefers-color-scheme`), forced dark (the colour inversion the Gmail and Outlook apps apply),
   no `<style>` (Gmail with non-Google accounts) and images off.
-- **Live engines:** the email running in real WebKit (Apple Mail / iOS Mail), Chromium (webmail,
-  Android) and Gecko (Thunderbird) pages, streamed into the app as tiles you can scroll, hover and
-  click (links are shown, not followed). Scripts are off, as in every email client.
+- **Real engines:** the email running in real WebKit (Apple Mail / iOS Mail), Chromium (webmail,
+  Android) and Gecko (Thunderbird) pages, streamed into the device frames so you can scroll, hover
+  and click (links are shown, not followed). Scripts are off, as in every email client.
 - **Checks:** content overflowing phone screens (and which element causes it), Gmail's 102 KB
   clipping, low contrast in light and dark, text iOS will resize, small buttons, missing alt text,
   local/broken images and links, missing plain-text part, and more.
@@ -26,16 +26,16 @@ Email sources: paste HTML or a raw `.eml`, upload a file, or connect **Mailpit**
 
 ```bash
 npm install
-npm run browsers      # once: downloads WebKit, Chromium and Firefox for Live engines (optional)
+npm run browsers      # once: downloads WebKit, Chromium and Firefox for Real engines (optional)
 npm start             # → http://localhost:4600
 ```
 
-Without `npm run browsers` everything works except the **Live engines** tab. The previews then
+Without `npm run browsers` everything works except **Real engines**. The previews then
 render in your own browser only.
 
 ### Nothing is stored
 
-Live engine tiles are pages held open in memory on the local server; frames go straight to your
+Real-engine screens are pages held open in memory on the local server; frames go straight to your
 browser and are never written to disk. *Snapshot* opens a full-length image in a new tab without
 saving it. A tile's engine page closes when you close the tile, switch modes or emails, leave the
 page, stop the server, or after 60 seconds with nobody watching. Only the CLI's `--render <dir>`
@@ -43,67 +43,75 @@ writes files, to the folder you name.
 
 ## Walkthrough
 
-Open http://localhost:4600 and paste an email, drop an `.html`/`.eml` file, or connect an inbox.
-Two samples are built in: a **Broken report** with typical mistakes and a **Responsive
-newsletter** that passes. The screenshots below use them.
+Open http://localhost:4600 and paste an email, drop an `.html`/`.eml` file anywhere, or connect
+an inbox. Two samples are built in: **Ember Roasters**, a polished autumn-launch email built the
+robust way, and **Broken report**, which makes the classic mistakes.
 
-### 1. Preview on every device
+![Start screen](docs/screenshots/00-empty.png)
 
-Each preview runs your email in an iframe at real device widths, with scripts off. Badges flag
-problems found on that device. Here the broken sample's fixed 600px table overflows both phones.
+### 1. Your email on every screen
 
-![Preview tab: the broken sample on iPhone SE and Android, with error and warning badges](docs/screenshots/01-preview.png)
+The email sits on a stage in phone, tablet and laptop frames, all at their true viewport sizes
+and scaled together so you can compare them. The chip at the top right is the average client
+support score and the issue count. The dock at the bottom switches renderer, mode and devices.
+
+![Ember Roasters on iPhone, iPad and desktop](docs/screenshots/01-stage.png)
 
 ### 2. Switch modes to see what clients do to it
 
 *Dark* applies the email's own dark-mode CSS, as Apple Mail does. *Forced dark* simulates the
 colour inversion of the Gmail and Outlook apps. *No `<style>`* removes embedded CSS, as Gmail does
-for non-Google accounts. *Images off* blocks images, the default in many corporate clients.
+for non-Google accounts. *Images off* blocks images, the default in many work inboxes. Keys
+`1`–`5` switch modes.
 
-| Dark (the newsletter's own dark styles) | Forced dark (Gmail / Outlook apps) |
+| Dark (Ember's own dark styles) | Forced dark (Gmail / Outlook apps) |
 |---|---|
-| ![Dark mode preview of the responsive newsletter](docs/screenshots/06-dark.png) | ![Forced dark preview of the responsive newsletter](docs/screenshots/07-forced-dark.png) |
+| ![Ember Roasters in dark mode](docs/screenshots/05-dark.png) | ![Broken report under forced dark](docs/screenshots/07-forced-dark.png) |
 
-![No style mode: without embedded CSS the broken sample's layout falls apart](docs/screenshots/02-no-style.png)
+### 3. Inspect: score, clients, features
 
-### 3. See which clients support what
+**Inspect** (or `I`) opens the inspector. *Overview* gives the verdict and the clients with the
+least support. *Clients* scores all 48 clients from [caniemail.com](https://www.caniemail.com)
+data; click one to see what it drops and why. *Features* lists every HTML/CSS feature the email
+uses, where, and which clients fall short.
 
-Every HTML and CSS feature in the email is matched against [caniemail.com](https://www.caniemail.com)
-data. Each client gets a score; click one to see what it drops and why.
+![Inspector overview](docs/screenshots/02-overview.png)
 
-![Clients tab: per-client support scores, Outlook for Windows expanded to show unsupported features](docs/screenshots/03-clients.png)
+| Clients | Features |
+|---|---|
+| ![Clients with Gmail Android expanded](docs/screenshots/03-clients.png) | ![A feature expanded with code and per-family notes](docs/screenshots/04-features.png) |
 
-The **Features** tab turns it around: each feature, where it's used in your code, and which
-clients don't support it, with caniemail's notes.
+### 4. Fix the issues
 
-![Features tab: a feature expanded with code samples and per-client notes](docs/screenshots/04-features.png)
+Each screen gets an OK or error badge from layout checks run on the rendered email: overflow
+(and the element causing it), shrink-to-fit, contrast, text size, tap targets. *Issues* collects
+those plus checks on the HTML itself: Gmail's 102 KB clipping, viewport, alt text, links.
 
-### 4. Read the checks
-
-Problems found in the HTML itself (size, viewport, alt text, links) and in the rendered layout
-(overflow and the element causing it, contrast, text size, tap targets), with the devices and
-modes each one appeared on.
-
-![Checks tab: errors and warnings for the broken sample](docs/screenshots/05-checks.png)
+![Broken report with its issues](docs/screenshots/06-issues.png)
 
 ### 5. Scroll and click it in real engines
 
-**Live engines** runs the email in real WebKit, Chromium and Firefox pages on your machine and
-streams them into the app. Scroll, hover and click inside a tile; clicked links are shown
-instead of followed. Nothing is saved to disk.
+**Real engines** swaps each screen for a real WebKit, Chromium or Firefox page running on your
+machine, streamed in. Scroll, hover and click inside a screen; clicked links are shown instead of
+followed. Nothing is saved to disk.
 
-![Live engines tab: the newsletter scrolled in a WebKit iPhone tile next to a Chromium Android tile](docs/screenshots/08-live.png)
+![Ember Roasters live in WebKit and Chromium](docs/screenshots/08-live.png)
 
 ### 6. Or connect your mail catcher
 
-Point it at Mailpit, MailHog or Mailtrap to browse and check what your app actually sends.
+**Open email → Inbox** browses Mailpit, MailHog or Mailtrap so you can check what your app
+actually sends.
 
-![Inbox tab with a Mailpit connection form](docs/screenshots/09-inbox.png)
+![Inbox connection](docs/screenshots/09-inbox.png)
+
+The small slider button at the bottom right holds display tweaks: realistic or minimal frames,
+the stage backdrop, and fit-to-screen or 100% size.
 
 ## Command line / CI
 
 ```bash
 npx email-lens check public/samples/broken-report.html
+npx email-lens check public/samples/ember-roasters.html
 npx email-lens check email.html
 npx email-lens check message.eml --clients "gmail.*,outlook.*,apple-mail.*" --min-score 80
 npx email-lens check email.html --render ./shots     # also writes 30 engine screenshots
@@ -116,7 +124,7 @@ images, …) or a selected client scores below `--min-score`.
 
 ## Connecting a mail catcher
 
-In the **Inbox** tab, pick *New Mailpit / MailHog / Mailtrap connection*, fill it in and connect.
+Under **Open email → Inbox**, pick *New Mailpit / MailHog / Mailtrap connection*, fill it in and connect.
 Tick *Remember in this browser* to keep it in this browser's localStorage, password included.
 To keep credentials out of the browser, define connections on the server instead, in
 `~/.config/email-lens/sources.json` (or the file named by `EMAIL_LENS_SOURCES`):
@@ -141,7 +149,7 @@ To keep credentials out of the browser, define connections on the server instead
   being unsupported is not always visible (an unsupported `box-shadow` just disappears), so read
   the scores together with the previews. Some entries are harmless by design: "HTML5 doctype
   unsupported" means the client drops the doctype.
-- Previews and live engines use real browser engines, but they are not the clients themselves. Apple
+- Previews and real engines use real browser engines, but they are not the clients themselves. Apple
   Mail and iOS Mail are WebKit with few changes, so those are close. Gmail and Outlook also
   rewrite your HTML; the *no `<style>`* and *forced dark* modes simulate the two rewrites that
   break the most emails.

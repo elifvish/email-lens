@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>email-lens</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='26' height='18' rx='3' fill='%234f46e5'/%3E%3Cpath d='M4 9l12 9 12-9' stroke='white' stroke-width='2.4' fill='none'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="26" height="18" rx="3"/><path d="M4 9l12 9 12-9"/></svg>
+      <span>email-lens</span>
+    </div>
+    <div class="topbar-meta">
+      <span id="data-info" class="muted"></span>
+      <button id="update-data" class="btn btn-ghost btn-sm" type="button">Update data</button>
+      <span id="engine-info" class="pill"></span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="seg" role="tablist" aria-label="Email source">
+        <button role="tab" data-src="paste" aria-selected="true">Paste</button>
+        <button role="tab" data-src="upload" aria-selected="false">Upload</button>
+        <button role="tab" data-src="inbox" aria-selected="false">Inbox</button>
+      </div>
+
+      <section data-src-panel="paste">
+        <label class="field-label" for="paste-input">HTML or raw .eml source</label>
+        <textarea id="paste-input" spellcheck="false" placeholder="<!doctype html>&#10;<html>…&#10;&#10;or paste a full .eml (headers + MIME body)"></textarea>
+        <div class="row">
+          <button id="paste-check" class="btn btn-primary" type="button">Check email</button>
+          <button id="paste-sample" class="btn btn-ghost" type="button">Load a sample</button>
+        </div>
+        <p class="hint">⌘/Ctrl + Enter to check. Nothing leaves your machine except image loads from the email itself.</p>
+      </section>
+
+      <section data-src-panel="upload" hidden>
+        <label id="dropzone" class="dropzone" for="file-input">
+          <input id="file-input" type="file" accept=".html,.htm,.eml,text/html,message/rfc822" hidden>
+          <strong>Drop an .html or .eml file</strong>
+          <span class="muted">or click to choose</span>
+        </label>
+      </section>
+
+      <section data-src-panel="inbox" hidden>
+        <label class="field-label" for="conn-select">Connection</label>
+        <select id="conn-select"></select>
+        <form id="conn-form" class="conn-form" autocomplete="off"></form>
+        <div class="row">
+          <button id="conn-connect" class="btn btn-primary" type="button">Connect</button>
+          <label class="check"><input id="conn-remember" type="checkbox"> Remember in this browser</label>
+        </div>
+        <div id="inbox-browser" hidden>
+          <input id="inbox-search" type="search" placeholder="Search (subject, to:, from:)">
+          <ul id="inbox-list" class="inbox-list"></ul>
+        </div>
+        <p id="inbox-status" class="hint"></p>
+      </section>
+    </aside>
+
+    <main class="main">
+      <div id="empty" class="empty">
+        <h1>Will this email hold up everywhere?</h1>
+        <p>Paste HTML, drop an .eml, or connect Mailpit, MailHog or Mailtrap. email-lens shows:</p>
+        <ul>
+          <li><strong>Client support</strong> for every HTML and CSS feature the email uses, across ~45 clients (caniemail.com data)</li>
+          <li><strong>Device previews</strong> from 320px phones to desktop, in light, dark, forced-dark, stripped-CSS and images-off modes</li>
+          <li><strong>Live engines</strong>: scroll and click the email in real WebKit (Apple Mail), Chromium (webmail, Android) and Gecko (Thunderbird)</li>
+          <li><strong>Checks</strong> for overflow on phones, Gmail clipping, contrast, tap targets, alt text and more</li>
+        </ul>
+      </div>
+
+      <div id="result" hidden>
+        <div class="summary">
+          <div class="summary-text">
+            <h1 id="r-subject"></h1>
+            <p id="r-meta" class="muted"></p>
+          </div>
+          <div class="summary-stats">
+            <div class="stat"><span id="r-score" class="stat-value"></span><span class="stat-label">avg. client support</span></div>
+            <div class="stat"><span id="r-worst" class="stat-value"></span><span id="r-worst-label" class="stat-label">lowest</span></div>
+            <div class="stat"><span id="r-errors" class="stat-value"></span><span class="stat-label">errors</span></div>
+            <div class="stat"><span id="r-warns" class="stat-value"></span><span class="stat-label">warnings</span></div>
+          </div>
+        </div>
+
+        <nav class="tabs" role="tablist" aria-label="Report">
+          <button role="tab" data-tab="preview" aria-selected="true">Preview</button>
+          <button role="tab" data-tab="clients" aria-selected="false">Clients</button>
+          <button role="tab" data-tab="features" aria-selected="false">Features</button>
+          <button role="tab" data-tab="checks" aria-selected="false">Checks <span id="checks-count" class="count"></span></button>
+          <button role="tab" data-tab="live" aria-selected="false">Live engines</button>
+          <button role="tab" data-tab="source" aria-selected="false">Source</button>
+        </nav>
+
+        <section data-tab-panel="preview">
+          <div class="toolbar">
+            <div id="device-chips" class="chips" aria-label="Devices"></div>
+            <div id="mode-seg" class="seg seg-sm" role="radiogroup" aria-label="Mode"></div>
+          </div>
+          <p id="mode-note" class="hint"></p>
+          <div id="frames" class="frames"></div>
+        </section>
+
+        <section data-tab-panel="clients" hidden>
+          <div class="toolbar">
+            <label class="check"><input id="clients-key" type="checkbox" checked> Major clients only</label>
+            <span class="muted legend"><i class="dot y"></i>supported <i class="dot a"></i>partial <i class="dot n"></i>unsupported <i class="dot u"></i>untested</span>
+          </div>
+          <div id="clients" class="client-grid"></div>
+        </section>
+
+        <section data-tab-panel="features" hidden>
+          <div class="toolbar">
+            <label class="check"><input id="features-problems" type="checkbox" checked> Only features with gaps</label>
+            <input id="features-filter" type="search" placeholder="Filter features">
+          </div>
+          <div id="features"></div>
+        </section>
+
+        <section data-tab-panel="checks" hidden>
+          <div id="checks"></div>
+        </section>
+
+        <section data-tab-panel="live" hidden>
+          <div class="toolbar">
+            <div id="live-device-chips" class="chips" aria-label="Devices"></div>
+            <div id="live-mode-seg" class="seg seg-sm" role="radiogroup" aria-label="Mode"></div>
+          </div>
+          <div class="toolbar">
+            <div class="row">
+              <button id="live-start" class="btn btn-primary" type="button">Start live view</button>
+              <button id="live-stop" class="btn btn-ghost" type="button" hidden>Stop</button>
+            </div>
+            <span id="live-status" class="muted"></span>
+          </div>
+          <p class="hint">Each tile is a real engine running on this machine with scripts off, as in email clients: WebKit for Apple Mail and iOS Mail, Chromium for webmail and Android apps, Gecko for Thunderbird. Scroll, hover and click inside a tile; clicked links are shown, not followed. Nothing is saved: tiles close when you switch emails or leave the page, and <em>Snapshot</em> opens a full-length image in a new tab without storing it.</p>
+          <div id="live-tiles" class="frames"></div>
+        </section>
+
+        <section data-tab-panel="source" hidden>
+          <div class="toolbar">
+            <button id="copy-source" class="btn btn-ghost btn-sm" type="button">Copy HTML</button>
+            <span id="source-size" class="muted"></span>
+          </div>
+          <pre id="source" class="source"></pre>
+          <details id="text-part" hidden><summary>Plain-text part</summary><pre id="source-text" class="source"></pre></details>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

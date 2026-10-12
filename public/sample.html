@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Your weekly report</title>
+  <style>
+    body { margin: 0; background: #f2f3f7; font-family: -apple-system, system-ui, sans-serif; }
+    .card { border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .stats { display: flex; gap: 16px; }
+    .stat { flex: 1; background: #f6f7fb; border-radius: 8px; padding: 12px; }
+    .stat b { display: block; font-size: 22px; }
+    .btn:hover { background: #3730a3 !important; }
+    .footer a:not(.plain) { color: #b5b8c2; }
+    @media (max-width: 480px) { .stats { display: block; } }
+  </style>
+</head>
+<body>
+  <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#f2f3f7">
+    <tr>
+      <td align="center" style="padding: 24px 0;">
+        <table class="card" width="600" cellpadding="0" cellspacing="0" style="background: #ffffff;">
+          <tr>
+            <td style="padding: 28px 32px 8px;">
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAYCAYAAAAMAljuAAACpUlEQVR42u2YTUhVQRiGn6sikS6aCBoKokU0W5dRVkqi2Q+X4i6lhRkVtahIqHZuKlIJkorsj9pIP4hSC3FRQRkhQbScRctgcDMGJSreW5vvxOFyvUqeW12ddzW/78z53nm/OedAQEDA/EjFK+nmrz//lGh4dGMqhHPpqEhCjCTmB8QESSqYQZQEBEk6iEGUhFJWwAoVRGnTobSZUdqsL/E615Q2R/PaRpU2h5U2J+eZM7kSHXIQuAHsK/E6L4HWWLBrgU3e2UHv7O3/1SFVf9kdq4Ea4B5wGXiotFkH9ANrgVmgzTs7Iad1ENgNdAP1wHagzzt7XWmjgD5AA9XAee/seGy5MeGv8s7OAU3ASOQE7+waceldQAFfYvssyK200cADoBb4DrR7Z105O6QFGPHOWmCz0qYa6AWeeWcbgAGgS8auAu4AjcAtcVUj0Cn93SJOE9Amov6GdzYLfAC2SdN+YDhvPz3AE+/sTmBI1izG3QsMeGd3yV57ytohQBqoU9pkgA1y+vcAx6T/sbgCIAd89M5mlTazUs6JyyJxtyhtIu4apU2lCBHhhaStdyJM/t3RAHTEUly2GLeMb5e2p8DVshVEHmird7ZO6i3AAaAy+mMgwfwmU2ZjwZ32zuYK7H2vd3ZaaVMB1OeJgaSoM0qb58AnSV1xVOdli1QxbqVNajld6juAz7H6W6AZGBfnRG9gVxbJNwYcknIrcDF/gHd2EpiSUz1UgON9tLZwpRbgfg1kpJwB3pRzykoDr2LBmlLaTAA3gUtKm1PijiOL5DsL9CttTgBzsbRX6G2rC7hQoO8c8Ehpc1rEmVmAuxO4r7Q5DvyIpa/EkCrFl3X40Ri+1IMgAUGQIEjAPxAk6Qs4XOgJOCSpIAYxEkxZSw1mECNgWeIXk7fxtKgMBuIAAAAASUVORK5CYII=" width="100" height="24">
+              <h1 style="font-size: 24px; color: #111827; margin: 20px 0 8px;">Your weekly report</h1>
+              <p style="font-size: 15px; line-height: 1.5; color: #374151; margin: 0 0 20px;">Here is how your videos did this week. Views are up compared to last week.</p>
+              <div class="stats">
+                <div class="stat"><b>12,480</b><span style="font-size: 12px; color: #6b7280;">views</span></div>
+                <div class="stat"><b>3m 42s</b><span style="font-size: 12px; color: #6b7280;">avg. watch time</span></div>
+                <div class="stat"><b>86%</b><span style="font-size: 12px; color: #6b7280;">completion</span></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 24px 32px;">
+              <a class="btn" href="https://example.com/report" style="background: #4f46e5; color: #ffffff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; display: inline-block;">Open full report</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="footer" style="padding: 16px 32px 28px; font-size: 11px; color: #b5b8c2;">
+              You're receiving this because you're subscribed to weekly reports.
+              <a href="#">Unsubscribe</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
